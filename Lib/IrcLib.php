@@ -1,6 +1,6 @@
 <?php
 /**
- * 
+ *
  */
 
 App::uses('IrcSocket', 'InfinitasBot.Network');
@@ -14,14 +14,14 @@ App::uses('IrcSocket', 'InfinitasBot.Network');
 class IrcLib {
 /**
  * Active users in the channel
- * 
+ *
  * @var array
  */
 	protected $_activeUsers = array();
 
 /**
  * The connection being used
- * 
+ *
  * @var array
  */
 	protected $_connection = array();
@@ -30,14 +30,14 @@ class IrcLib {
  * Handler for output
  *
  * Valid callback to be used with call_user_func
- * 
+ *
  * @var string|array
  */
 	protected $_outputHandler = 'print_r';
 
 /**
  * Constructor
- * 
+ *
  * @param array $connection the connection details to use
  *
  * @return void
@@ -63,7 +63,7 @@ class IrcLib {
  * Join the requested channels
  *
  * @param array $options the login options
- * 
+ *
  * @return boolean
  */
 	public function login(array $options = array()) {
@@ -84,7 +84,7 @@ class IrcLib {
  * Join the requested channels
  *
  * @param array $channels channels to join
- * 
+ *
  * @return boolean
  */
 	function join($channels = array()) {
@@ -130,7 +130,7 @@ class IrcLib {
 					'channel' => $line['channel']
 				));
 			}
-			
+
 			$this->_handleInput($line);
 		}
 	}
@@ -215,10 +215,10 @@ class IrcLib {
  * Trigger an event and check if something handled the message
  *
  * If nothing handled it, try a tell and if nothing give a command not found
- * 
+ *
  * @param string $event the event to trigger
  * @param array $data the parsed message data
- * 
+ *
  * @return void
  */
 	protected function _trigger($event, $data) {
@@ -235,7 +235,7 @@ class IrcLib {
 
 		$count = count($results);
 
-		$commandNotFound = !$count || ($count == 1 && !current($results));
+		$commandNotFound = substr($data['message'], 0, 1) == '!' && (!$count || ($count == 1 && !current($results)));
 		if($commandNotFound) {
 			$message = ':to: Command not found';
 			$data['tell'] = ClassRegistry::init('InfinitasBot.InfinitasBotTell')->find('tell', $data['command']);
