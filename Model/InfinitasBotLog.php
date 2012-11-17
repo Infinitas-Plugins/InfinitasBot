@@ -11,46 +11,22 @@
  * @license	   http://infinitas-cms.org/mit-license The MIT License
  * @since 0.9b1
  *
- * @author dogmatic69
- *
- * Licensed under The MIT License
- * Redistributions of files must retain the above copyright notice.
+ * @author Carl Sutton <dogmatic69@infinitas-cms.org>
  */
 
 class InfinitasBotLog extends InfinitasBotAppModel {
 /**
- * Additional behaviours that are attached to this model
+ * Custom find methods
  *
- * @access public
  * @var array
  */
-	public $actsAs = array(
-		// 'Libs.Feedable',
-		// 'Libs.Rateable'
+	public $findMethods = array(
+		'paginated' => true
 	);
 
 /**
- * How the default ordering on this model is done
+ * belongsTo relations
  *
- * @access public
- * @var array
- */
-	public $order = array(
-	);
-
-/**
- * hasOne relations for this model
- *
- * @access public
- * @var array
- */
-	public $hasOne = array(
-	);
-
-/**
- * belongsTo relations for this model
- *
- * @access public
  * @var array
  */
 	public $belongsTo = array(
@@ -71,28 +47,7 @@ class InfinitasBotLog extends InfinitasBotAppModel {
 	);
 
 /**
- * hasMany relations for this model
- *
- * @access public
- * @var array
- */
-	public $hasMany = array(
-	);
-
-/**
- * hasAndBelongsToMany relations for this model
- *
- * @access public
- * @var array
- */
-	public $hasAndBelongsToMany = array(
-	);
-
-/**
- * overload the construct method so that you can use translated validation
- * messages.
- *
- * @access public
+ * Constructor
  *
  * @param mixed $id string uuid or id
  * @param string $table the table that the model is for
@@ -102,6 +57,10 @@ class InfinitasBotLog extends InfinitasBotAppModel {
  */
 	public function __construct($id = false, $table = null, $ds = null) {
 		parent::__construct($id, $table, $ds);
+
+		$this->order = array(
+			$this->alias . '.created' => 'desc'
+		);
 
 		$this->validate = array(
 			'infinitas_bot_user_id' => array(
@@ -125,8 +84,8 @@ class InfinitasBotLog extends InfinitasBotAppModel {
 				),
 			),
 			'message' => array(
-				'notempty' => array(
-					'rule' => array('notempty'),
+				'notEmpty' => array(
+					'rule' => 'notEmpty',
 					//'message' => 'Your custom message here',
 					//'allowEmpty' => false,
 					//'required' => false,
@@ -137,16 +96,51 @@ class InfinitasBotLog extends InfinitasBotAppModel {
 		);
 	}
 
+/**
+ * Log a message
+ *
+ * @param array $data the parsed message
+ *
+ * @return boolean
+ */
 	public function logChat($data) {
 		if(empty($data['infinitas_bot_user_id'])) {
 			$data['infinitas_bot_user_id'] = $this->InfinitasBotUser->createUser($data['user']);
 		}
+
 		$this->create();
-		return $this->save(array(
+		return (bool)$this->save(array(
 			'infinitas_bot_user_id' => $data['infinitas_bot_user_id'],
 			'infinitas_bot_channel_id' => $data['infinitas_bot_channel_id'],
 			'message' => $data['message']
 		));
+	}
+
+/**
+ * Get paginated logs with related user data
+ *
+ * @param type $state
+ * @param type $query
+ * @param type $results
+ *
+ * @return array
+ */
+	protected function _findPaginated($state, $query, $results = array()) {
+		if($state == 'before') {
+			$query['fields'] = array_merge((array)$query['fields'], array(
+				$this->alias . '.' . $this->primaryKey,
+				$this->alias . '.message',
+				$this->alias . '.created',
+
+				$this->InfinitasBotUser->alias . '.' . $this->InfinitasBotUser->primaryKey,
+				$this->InfinitasBotUser->alias . '.' . $this->InfinitasBotUser->displayField
+			));
+
+			$query['joins'][] = $this->autoJoinModel($this->InfinitasBotUser->fullModelName());
+			return $query;
+		}
+
+		return $results;
 	}
 
 }

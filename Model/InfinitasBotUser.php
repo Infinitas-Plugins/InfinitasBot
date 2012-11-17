@@ -2,26 +2,20 @@
 /**
  * InfinitasBotUser model
  *
- * @brief Add some documentation for InfinitasBotUser model.
- *
  * @copyright Copyright (c) 2009 Carl Sutton (dogmatic69)
  *
- * @link		  http://infinitas-cms.org/InfinitasBot
- * @package	   InfinitasBot.Model
- * @license	   http://infinitas-cms.org/mit-license The MIT License
+ * @link http://infinitas-cms.org/InfinitasBot
+ * @package InfinitasBot.Model
+ * @license http://infinitas-cms.org/mit-license The MIT License
  * @since 0.9b1
  *
- * @author dogmatic69
- *
- * Licensed under The MIT License
- * Redistributions of files must retain the above copyright notice.
+ * @author Carl Sutton <dogmatic69@infinitas-cms.org>
  */
 
 class InfinitasBotUser extends InfinitasBotAppModel {
 /**
  * The display field for select boxes
  *
- * @access public
  * @var string
  */
 	public $displayField = 'username';
@@ -31,9 +25,8 @@ class InfinitasBotUser extends InfinitasBotAppModel {
 	);
 
 /**
- * hasMany relations for this model
+ * hasMany relations
  *
- * @access public
  * @var array
  */
 	public $hasMany = array(
@@ -53,10 +46,7 @@ class InfinitasBotUser extends InfinitasBotAppModel {
 	);
 
 /**
- * overload the construct method so that you can use translated validation
- * messages.
- *
- * @access public
+ * Constructor
  *
  * @param mixed $id string uuid or id
  * @param string $table the table that the model is for
@@ -89,6 +79,13 @@ class InfinitasBotUser extends InfinitasBotAppModel {
 		);
 	}
 
+/**
+ * Save a new user record
+ *
+ * @param string $username
+ *
+ * @return string
+ */
 	public function createUser($username) {
 		$this->create();
 		$saved = $this->save(array(
