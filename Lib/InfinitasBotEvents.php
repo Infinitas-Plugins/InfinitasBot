@@ -6,15 +6,15 @@
  */
 
 /**
- * 
+ *
  */
 
 class InfinitasBotEvents extends AppEvents {
 /**
  * Get plugin details
- * 
+ *
  * @param Event $Event the event being called
- * 
+ *
  * @return array
  */
 	public function onPluginRollCall(Event $Event) {
@@ -31,16 +31,26 @@ class InfinitasBotEvents extends AppEvents {
 		);
 	}
 
+/**
+ * Log IRC messages that are not commands
+ *
+ * @param Event $Event
+ * @param array $data
+ *
+ * @return void
+ */
 	public function onIrcMessage(Event $Event, $data = null) {
-		ClassRegistry::init('InfinitasBot.InfinitasBotLog')->logChat($data);
+		if(empty($data['command'])) {
+			ClassRegistry::init('InfinitasBot.InfinitasBotLog')->logChat($data);
+		}
 	}
 
 /**
  * Event when user joins
- * 
+ *
  * @param Event $Event the event being triggered
  * @param array $data the data being parsed
- * 
+ *
  * @return boolean
  */
 	public function onIrcUserJoin(Event $Event, $data = null) {
