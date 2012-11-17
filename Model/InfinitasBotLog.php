@@ -55,14 +55,14 @@ class InfinitasBotLog extends InfinitasBotAppModel {
  */
 	public $belongsTo = array(
 		'InfinitasBotUser' => array(
-			'className' => 'InfinitasBotUser',
+			'className' => 'InfinitasBot.InfinitasBotUser',
 			'foreignKey' => 'infinitas_bot_user_id',
 			'conditions' => '',
 			'fields' => '',
 			'order' => '',
 		),
 		'InfinitasBotChannel' => array(
-			'className' => 'InfinitasBotChannel',
+			'className' => 'InfinitasBot.InfinitasBotChannel',
 			'foreignKey' => 'infinitas_bot_channel_id',
 			'conditions' => '',
 			'fields' => '',

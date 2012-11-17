@@ -31,7 +31,7 @@ class InfinitasBotChannel extends InfinitasBotAppModel {
  */
 	public $hasMany = array(
 		'InfinitasBotLog' => array(
-			'className' => 'InfinitasBotLog',
+			'className' => 'InfinitasBot.InfinitasBotLog',
 			'foreignKey' => 'infinitas_bot_channel_id',
 			'dependent' => false,
 			'conditions' => '',
@@ -76,11 +76,11 @@ class InfinitasBotChannel extends InfinitasBotAppModel {
 
 /**
  * Get a channel id
- * 
+ *
  * @param string $state [description]
  * @param array $query [description]
  * @param array $results [description]
- * 
+ *
  * @return string|boolean
  */
 	protected function _findChannelId($state, $query, $results = array()) {

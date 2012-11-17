@@ -20,7 +20,7 @@
 class InfinitasBotTell extends InfinitasBotAppModel {
 /**
  * Custom find methods
- * 
+ *
  * @var array
  */
 	public $findMethods = array(
@@ -35,7 +35,7 @@ class InfinitasBotTell extends InfinitasBotAppModel {
  */
 	public $belongsTo = array(
 		'InfinitasBotUser' => array(
-			'className' => 'InfinitasBotUser',
+			'className' => 'InfinitasBot.InfinitasBotUser',
 			'foreignKey' => 'infinitas_bot_user_id',
 			'conditions' => '',
 			'fields' => '',
@@ -94,11 +94,11 @@ class InfinitasBotTell extends InfinitasBotAppModel {
 
 /**
  * Find a tell
- * 
+ *
  * @param string $state [description]
  * @param array $query [description]
  * @param array $results [description]
- * 
+ *
  * @return boolean|string
  */
 	protected function _findTell($state, $query, $results = array()) {

@@ -38,7 +38,7 @@ class InfinitasBotUser extends InfinitasBotAppModel {
  */
 	public $hasMany = array(
 		'InfinitasBotLog' => array(
-			'className' => 'InfinitasBotLog',
+			'className' => 'InfinitasBot.InfinitasBotLog',
 			'foreignKey' => 'infinitas_bot_user_id',
 			'dependent' => false,
 			'conditions' => '',
@@ -105,9 +105,9 @@ class InfinitasBotUser extends InfinitasBotAppModel {
 
 /**
  * Update the last seen time
- * 
+ *
  * @param string $username the username of the user being updated
- * 
+ *
  * @return boolean
  */
 	public function updateSeen($username) {
@@ -119,11 +119,11 @@ class InfinitasBotUser extends InfinitasBotAppModel {
 
 /**
  * Get a users id
- * 
+ *
  * @param string $state [description]
  * @param array $query [description]
  * @param array $results [description]
- * 
+ *
  * @return string|boolean
  */
 	protected function _findUserId($state, $query, $results = array()) {
