@@ -1,0 +1,12 @@
+table {
+	width: 100%;
+}
+
+table th.message,
+table td.message {
+	text-align: left;
+}
+
+table tr.highlight td {
+	background-color: yellow;
+}

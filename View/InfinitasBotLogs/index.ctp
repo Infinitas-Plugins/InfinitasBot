@@ -17,21 +17,35 @@
 		<?php
 			echo $this->Infinitas->adminTableHeader(
 				array(
-					'#',
-					$this->Paginator->sort('created', __d('infinitas_bot', 'At')) => array(
-						'style' => 'width:75px;'
+					'#' => array(
+						'style' => 'width: 15px;'
 					),
-					$this->Paginator->sort('InfinitasBotUser.id', __d('infinitas_bot', 'User')),
-					__d('infinitas_bot', 'Message'),
-				)
+					$this->Paginator->sort('created', __d('infinitas_bot', 'At')) => array(
+						'style' => 'width: 120px;'
+					),
+					$this->Paginator->sort('InfinitasBotUser.id', __d('infinitas_bot', 'User')) => array(
+						'style' => 'width: 100px;'
+					),
+					__d('infinitas_bot', 'Message') => array(
+						'class' => 'message'
+					),
+				),
+				false
 			);
 
-			foreach ($infinitasBotLogs as $infinitasBotLog) { ?>
-				<tr class="<?php echo $this->Infinitas->rowClass(); ?>">
+			foreach ($infinitasBotLogs as $infinitasBotLog) {
+				$class = array(
+					$this->Infinitas->rowClass()
+				);
+				if(in_array($infinitasBotLog['InfinitasBotLog']['id'], $this->request->params['pass'])) {
+					$class[] = 'highlight';
+				} ?>
+				<tr class="<?php echo implode(' ', $class); ?>">
 					<td>
 						<?php
 							echo $this->Html->link('#', array(
-
+								'action' => 'link',
+								$infinitasBotLog['InfinitasBotLog']['id']
 							));
 						?>&nbsp;
 					</td>
@@ -45,7 +59,13 @@
 							));
 						?>&nbsp;
 					</td>
-					<td><?php echo h($infinitasBotLog['InfinitasBotLog']['message']); ?>&nbsp;</td>
+					<td class="message">
+						<?php
+							echo $this->Text->autoLinkUrls(h($infinitasBotLog['InfinitasBotLog']['message']), array(
+								'rel' => 'nofollow'
+							));
+						?>&nbsp;
+					</td>
 				</tr><?php
 			}
 		?>

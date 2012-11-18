@@ -21,7 +21,8 @@ class InfinitasBotLog extends InfinitasBotAppModel {
  * @var array
  */
 	public $findMethods = array(
-		'paginated' => true
+		'paginated' => true,
+		'directLink' => true
 	);
 
 /**
@@ -112,7 +113,7 @@ class InfinitasBotLog extends InfinitasBotAppModel {
 		return (bool)$this->save(array(
 			'infinitas_bot_user_id' => $data['infinitas_bot_user_id'],
 			'infinitas_bot_channel_id' => $data['infinitas_bot_channel_id'],
-			'message' => $data['message']
+			'message' => trim($data['message'])
 		));
 	}
 
@@ -141,6 +142,48 @@ class InfinitasBotLog extends InfinitasBotAppModel {
 		}
 
 		return $results;
+	}
+
+/**
+ * Get the data for sharing a link
+ *
+ * @param type $state
+ * @param type $query
+ * @param type $results
+ *
+ * @return array
+ *
+ * @throws InvalidArgumentException
+ */
+	protected function _findDirectLink($state, $query, $results = array()) {
+		if($state == 'before') {
+			if(empty($query[0])) {
+				throw new InvalidArgumentException(__d('infinitas_bot', 'Message could not be found'));
+			}
+			$countBefore = $this->find('count', array(
+				'conditions' => array(
+					$this->alias . '.created > LogJoin.created'
+				),
+				'joins' => array(
+					$this->autoJoinModel(array(
+						'model' => $this->fullModelName(),
+						'alias' => 'LogJoin',
+						'conditions' => array(
+							$this->alias . '.' . $this->primaryKey . ' = LogJoin.' . $this->primaryKey,
+							'LogJoin.' . $this->primaryKey => $query[0]
+						)
+					))
+				)
+			));
+
+			if($query['limit']) {
+				$query['page'] = round($countBefore / $query['limit']) + 1;
+			}
+
+			return self::_findPaginated($state, $query);
+		}
+
+		return self::_findPaginated($state, $query, $results);
 	}
 
 }

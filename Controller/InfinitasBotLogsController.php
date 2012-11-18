@@ -28,7 +28,34 @@ class InfinitasBotLogsController extends InfinitasBotAppController {
 		$this->Paginator->settings = array(
 			'paginated'
 		);
+		$this->_logs();
+	}
 
+/**
+ * Direct link to message
+ *
+ * @param string $id the message id to link to
+ */
+	public function link($id = null) {
+		$this->Paginator->settings = array(
+			'directLink',
+			$id
+		);
+		try {
+			$this->_logs();
+		} catch(Exception $e) {
+			$this->notice($e);
+		}
+
+		$this->render('index');
+	}
+
+/**
+ * Shared for index and link
+ *
+ * @return void
+ */
+	protected function _logs() {
 		$infinitasBotLogs = $this->Paginator->paginate(null, $this->Filter->filter);
 
 		$filterOptions = $this->Filter->filterOptions;

@@ -32,6 +32,19 @@ class InfinitasBotEvents extends AppEvents {
 	}
 
 /**
+ * Load css
+ *
+ * @param Event $Event
+ *
+ * @return array
+ */
+	public function onRequireCssToLoad(Event $Event) {
+		return array(
+			'InfinitasBot.infinitas_bot'
+		);
+	}
+
+/**
  * Log IRC messages that are not commands
  *
  * @param Event $Event
@@ -62,7 +75,7 @@ class InfinitasBotEvents extends AppEvents {
 	}
 
 	public function onIrcUserPart(Event $Event, $data = null) {
-		
+
 	}
 
 	public function onIrcQuit(Event $Event, $data = null) {
