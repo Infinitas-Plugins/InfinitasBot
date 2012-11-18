@@ -101,12 +101,20 @@ class IrcLib {
 				$channel = $password;
 				$password = null;
 			}
-			$this->IrcSocket->message('JOIN :channel :password', array(
-				'channel' => $channel,
-				'password' => $password
-			));
-			$this->_activeUsers[$channel] = array();
+			try {
+				EventCore::trigger($this, 'ircJoin', $channel);
+				$this->IrcSocket->message('JOIN :channel :password', array(
+					'channel' => $channel,
+					'password' => $password
+				));
+				$this->_activeUsers[$channel] = array();
+			} catch (Exception $e) {
+				$this->output('<notice>Cant join</notice> :exception', array(
+					'exception' => $e->getMessage()
+				));
+			}
 		}
+
 		return true;
 	}
 
@@ -155,6 +163,28 @@ class IrcLib {
 		$this->IrcSocket->message('PRIVMSG :channel ::message', $options);
 	}
 
+/**
+ * Quit IRC
+ *
+ * @param string $message the quit message
+ *
+ * @return boolean
+ */
+	public function quit($message = 'leaving', $channel = null) {
+		if($channel) {
+			EventCore::trigger($this, 'ircQuit', $channel);
+			return $this->IrcSocket->message('PART :channel :message', array(
+				'message' => $message,
+				'channel' => $channel
+			));
+		}
+		
+		EventCore::trigger($this, 'ircQuit');
+		return $this->IrcSocket->message('QUIT :message', array(
+			'message' => $message
+		));
+	}
+
 	protected function _handleInput($input) {
 		$input['bot'] = $this->_whoAmI;
 		switch(strtolower($input['irc_command'])) {
@@ -189,6 +219,9 @@ class IrcLib {
 
 			case '433':
 				$this->output('<warning>Nick taken<warning> :bot', $input);
+				$this->IrcSocket->message('NICK :bot', array(
+					'bot' => $input['bot'] . '_'
+				));
 				break;
 
 			case 'join':
@@ -237,7 +270,7 @@ class IrcLib {
 
 		$commandNotFound = substr($data['message'], 0, 1) == '!' && (!$count || ($count == 1 && !current($results)));
 		if($commandNotFound) {
-			$message = ':to: Command not found';
+			$message = ':to: Command :command not found';
 			$tell = ClassRegistry::init('InfinitasBot.InfinitasBotTell')->find('tell', $data['command']);
 			if($tell) {
 				$message = ':to: ' . $tell;
