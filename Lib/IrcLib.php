@@ -238,9 +238,9 @@ class IrcLib {
 		$commandNotFound = substr($data['message'], 0, 1) == '!' && (!$count || ($count == 1 && !current($results)));
 		if($commandNotFound) {
 			$message = ':to: Command not found';
-			$data['tell'] = ClassRegistry::init('InfinitasBot.InfinitasBotTell')->find('tell', $data['command']);
-			if($data['tell']) {
-				$message = ':to: :tell';
+			$tell = ClassRegistry::init('InfinitasBot.InfinitasBotTell')->find('tell', $data['command']);
+			if($tell) {
+				$message = ':to: ' . $tell;
 			}
 
 			$this->reply($data['channel'], $message, $data);
