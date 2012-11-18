@@ -103,14 +103,17 @@ class InfinitasBotUser extends InfinitasBotAppModel {
 /**
  * Update the last seen time
  *
- * @param string $username the username of the user being updated
+ * @param string $username the username or id of the user being updated
  *
  * @return boolean
  */
 	public function updateSeen($username) {
 		return $this->updateAll(
 			array($this->alias . '.last_seen' => '\'' . date('Y-m-d H:i:s') . '\''),
-			array($this->alias . '.username' => $username)
+			array('or' => array(
+				$this->alias . '.username' => $username,
+				$this->alias . '.' . $this->primaryKey => $username,
+			))
 		);
 	}
 

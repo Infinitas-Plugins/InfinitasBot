@@ -109,6 +109,8 @@ class InfinitasBotLog extends InfinitasBotAppModel {
 			$data['infinitas_bot_user_id'] = $this->InfinitasBotUser->createUser($data['user']);
 		}
 
+		$this->InfinitasBotUser->updateSeen($data['infinitas_bot_user_id']);
+
 		$this->create();
 		return (bool)$this->save(array(
 			'infinitas_bot_user_id' => $data['infinitas_bot_user_id'],
