@@ -49,6 +49,10 @@ class InfinitasBotTell extends InfinitasBotAppModel {
 	public function __construct($id = false, $table = null, $ds = null) {
 		parent::__construct($id, $table, $ds);
 
+		$this->order = array(
+			$this->alias . '.' . $this->displayField => 'asc'
+		);
+
 		$this->validate = array(
 			'name' => array(
 				'notempty' => array(
